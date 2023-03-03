@@ -11,7 +11,8 @@ package Flag
 import "flag"
 
 type Flag struct {
-	Version string
+	Version          string // 数据包版本
+	OriginalFileSave bool   // 是否以原始文件的名字和路径保存
 }
 
 var Data Flag
@@ -23,10 +24,12 @@ var Data Flag
 func Init() error {
 	// 参数解析
 	Version := flag.String("data_version", "", "指定数据包版本")
+	OriginalFileSave := flag.Bool("original_file_save", false, "是否以原始文件的名字和路径保存")
 	flag.Parse()
 
 	// 参数写入变量
 	Data.Version = *Version
+	Data.OriginalFileSave = *OriginalFileSave
 
 	return nil
 }

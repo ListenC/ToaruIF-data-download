@@ -1,7 +1,7 @@
 /*
  * @Author: nijineko
  * @Date: 2023-03-03 23:43:42
- * @LastEditTime: 2023-03-04 00:43:12
+ * @LastEditTime: 2023-03-04 01:43:21
  * @LastEditors: nijineko
  * @Description: 下载文件
  * @FilePath: \DataDownload\internal\Download\Download.go
@@ -9,11 +9,15 @@
 package Download
 
 import (
+	"DataDownload/internal/Catalog"
+	"DataDownload/internal/Flag"
+	"fmt"
 	"io"
 	"net/http"
 	"os"
 	"path"
 
+	"github.com/pierrec/xxHash/xxHash64"
 	"github.com/schollz/progressbar/v3"
 )
 
@@ -87,5 +91,38 @@ func CreateFolder(Path string) error {
 			return err
 		}
 	}
+	return nil
+}
+
+/**
+ * @description: 下载资源文件
+ * @param {[]Catalog.Data} CatalogData Catalog文件数据
+ * @param {string} PathURL 资源文件地址
+ * @param {string} SavePath 保存路径
+ * @param {bool} xxHash OriginalFileSave模式下是否使用xxHash64计算文件名
+ * @return {error} 错误信息
+ */
+func Resource(CatalogData []Catalog.Data, PathURL string, SavePath string, xxHash bool) error {
+	// 遍历CatalogData
+	for _, Value := range CatalogData {
+		var FilePath string
+		// 判断是否以原始文件的名字和路径保存
+		if Flag.Data.OriginalFileSave && xxHash {
+			// 计算文件名
+			FileName := fmt.Sprintf("%d", xxHash64.Checksum([]byte(Value.Name), 0))
+			FilePath = path.Join(SavePath, FileName)
+		} else {
+			FilePath = path.Join(SavePath, Value.Path)
+		}
+
+		// 下载文件
+		Size, err := File(PathURL+Value.Path, FilePath)
+		if err != nil {
+			return err
+		}
+
+		fmt.Printf("文件 %s 下载完成，大小为 %dbytes\n", Value.Path, Size)
+	}
+
 	return nil
 }
