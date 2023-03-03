@@ -9,7 +9,7 @@
 package Catalog
 
 import (
-	"DataDownload/internal/HTTP"
+	"BlueArchiveDataDownload/internal/HTTP"
 	"encoding/json"
 )
 

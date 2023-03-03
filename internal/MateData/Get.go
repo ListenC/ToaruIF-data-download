@@ -1,7 +1,7 @@
 package MateData
 
 import (
-	"DataDownload/internal/HTTP"
+	"BlueArchiveDataDownload/internal/HTTP"
 	"encoding/json"
 	"fmt"
 )

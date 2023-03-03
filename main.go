@@ -9,10 +9,10 @@
 package main
 
 import (
-	"DataDownload/internal/Catalog"
-	"DataDownload/internal/Download"
-	"DataDownload/internal/Flag"
-	"DataDownload/internal/MateData"
+	"BlueArchiveDataDownload/internal/Catalog"
+	"BlueArchiveDataDownload/internal/Download"
+	"BlueArchiveDataDownload/internal/Flag"
+	"BlueArchiveDataDownload/internal/MateData"
 	"fmt"
 	"os"
 	"path"

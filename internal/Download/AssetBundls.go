@@ -9,7 +9,7 @@
 package Download
 
 import (
-	"DataDownload/internal/Catalog"
+	"BlueArchiveDataDownload/internal/Catalog"
 	"fmt"
 )
 

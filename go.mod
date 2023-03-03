@@ -1,4 +1,4 @@
-module DataDownload
+module BlueArchiveDataDownload
 
 go 1.20
 

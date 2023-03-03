@@ -1,7 +1,7 @@
 /*
  * @Author: nijineko
  * @Date: 2023-03-03 23:28:57
- * @LastEditTime: 2023-03-03 23:32:48
+ * @LastEditTime: 2023-03-04 02:30:13
  * @LastEditors: nijineko
  * @Description: 读取AssetBundls的CataLog文件到标准结构体
  * @FilePath: \DataDownload\internal\Catalog\AssetBundls.go
@@ -9,7 +9,7 @@
 package Catalog
 
 import (
-	"DataDownload/internal/HTTP"
+	"BlueArchiveDataDownload/internal/HTTP"
 	"encoding/json"
 )
 

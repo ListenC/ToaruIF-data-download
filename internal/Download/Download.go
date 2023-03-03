@@ -9,8 +9,8 @@
 package Download
 
 import (
-	"DataDownload/internal/Catalog"
-	"DataDownload/internal/Flag"
+	"BlueArchiveDataDownload/internal/Catalog"
+	"BlueArchiveDataDownload/internal/Flag"
 	"fmt"
 	"io"
 	"net/http"
