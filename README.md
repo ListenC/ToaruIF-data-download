@@ -14,6 +14,10 @@ BlueArchive游戏文件下载工具，使用Golang实现
     指定数据包版本
 -original_file_save
     是否以原始文件的名字和路径保存
+-max_pool int
+    最大并发数 (default 10)
+-filter string
+    字符串过滤器，只下载包含该字符串的文件
 -asset_bundls
     下载AssetBundls文件
 -media_resources
