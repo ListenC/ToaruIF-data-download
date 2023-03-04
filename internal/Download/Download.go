@@ -1,7 +1,7 @@
 /*
  * @Author: nijineko
  * @Date: 2023-03-03 23:43:42
- * @LastEditTime: 2023-03-04 01:43:21
+ * @LastEditTime: 2023-03-04 16:37:52
  * @LastEditors: nijineko
  * @Description: 下载文件
  * @FilePath: \DataDownload\internal\Download\Download.go
@@ -11,6 +11,7 @@ package Download
 import (
 	"BlueArchiveDataDownload/internal/Catalog"
 	"BlueArchiveDataDownload/internal/Flag"
+	"BlueArchiveDataDownload/tools/Pool"
 	"fmt"
 	"io"
 	"net/http"
@@ -103,26 +104,34 @@ func CreateFolder(Path string) error {
  * @return {error} 错误信息
  */
 func Resource(CatalogData []Catalog.Data, PathURL string, SavePath string, xxHash bool) error {
+	CoroutinePool := Pool.NewPool(Flag.Data.MaxPool)
+
 	// 遍历CatalogData
 	for _, Value := range CatalogData {
-		var FilePath string
-		// 判断是否以原始文件的名字和路径保存
-		if Flag.Data.OriginalFileSave && xxHash {
-			// 计算文件名
-			FileName := fmt.Sprintf("%d", xxHash64.Checksum([]byte(Value.Name), 0))
-			FilePath = path.Join(SavePath, FileName)
-		} else {
-			FilePath = path.Join(SavePath, Value.Path)
-		}
+		CoroutinePool.Add(1)
+		go func(Value Catalog.Data) {
+			var FilePath string
+			// 判断是否以原始文件的名字和路径保存
+			if Flag.Data.OriginalFileSave && xxHash {
+				// 计算文件名
+				FileName := fmt.Sprintf("%d", xxHash64.Checksum([]byte(Value.Name), 0))
+				FilePath = path.Join(SavePath, FileName)
+			} else {
+				FilePath = path.Join(SavePath, Value.Path)
+			}
 
-		// 下载文件
-		Size, err := File(PathURL+Value.Path, FilePath)
-		if err != nil {
-			return err
-		}
+			// 下载文件
+			Size, err := File(PathURL+Value.Path, FilePath)
+			if err != nil {
+				fmt.Printf("文件 %s 下载失败，请检查网络问题\n", Value.Path)
+			} else {
+				fmt.Printf("文件 %s 下载完成，大小为 %dbytes\n", Value.Path, Size)
+			}
 
-		fmt.Printf("文件 %s 下载完成，大小为 %dbytes\n", Value.Path, Size)
+			CoroutinePool.Done()
+		}(Value)
 	}
+	CoroutinePool.Wait()
 
 	return nil
 }
