@@ -16,3 +16,6 @@
 # vendor/
 
 com.YostarJP.BlueArchive
+
+start.bat
+start.sh
