@@ -1,7 +1,7 @@
 /*
  * @Author: nijineko
  * @Date: 2023-03-03 23:34:33
- * @LastEditTime: 2023-03-03 23:40:14
+ * @LastEditTime: 2023-03-04 13:11:15
  * @LastEditors: nijineko
  * @Description: 读取MediaResources的CataLog文件到标准结构体
  * @FilePath: \DataDownload\internal\Catalog\MediaResources.go
@@ -11,6 +11,7 @@ package Catalog
 import (
 	"BlueArchiveDataDownload/internal/HTTP"
 	"encoding/json"
+	"path"
 )
 
 type MediaResourcesOrigin struct {
@@ -29,13 +30,21 @@ type MediaResourcesOrigin struct {
 /**
  * @description: 获取MediaResources的CataLog数据
  * @param {string} AddressablesCatalogUrlRoot 资源地址
+ * @param {string} SavePath json文件保存路径(为空则不保存)
  * @return {[]Data} CatLog数据
  * @return {error} 错误信息
  */
-func GetMediaResources(AddressablesCatalogUrlRoot string) ([]Data, error) {
+func GetMediaResources(AddressablesCatalogUrlRoot string, SavePath string) ([]Data, error) {
 	Body, _, err := HTTP.Get(AddressablesCatalogUrlRoot + MediaResourcesCataLogPath)
 	if err != nil {
 		return nil, err
+	}
+
+	if SavePath != "" {
+		err := SaveJson(Body, path.Join(SavePath, path.Base(MediaResourcesCataLogPath)))
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	// 使用原始结构体解析JSON

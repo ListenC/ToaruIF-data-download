@@ -39,16 +39,20 @@ func main() {
 
 	// 下载AssetBundls资源
 	if Flag.Data.AssetBundls {
-		AssetBundlsCataLog, err := Catalog.GetAssetBundls(AddressablesCatalogUrlRoot)
-		if err != nil {
-			panic(err)
-		}
 		var AssetBundlsSavePath string
 		if Flag.Data.OriginalFileSave {
 			AssetBundlsSavePath = path.Join("com.YostarJP.BlueArchive", "files", "AssetBundls")
 		} else {
 			AssetBundlsSavePath = path.Join("com.YostarJP.BlueArchive", "AssetBundls")
 		}
+
+		// 获取Catalog文件
+		AssetBundlsCataLog, err := Catalog.GetAssetBundls(AddressablesCatalogUrlRoot, AssetBundlsSavePath)
+		if err != nil {
+			panic(err)
+		}
+
+		// 下载资源
 		err = Download.AssetBundls(AddressablesCatalogUrlRoot, AssetBundlsCataLog, AssetBundlsSavePath)
 		if err != nil {
 			panic(err)
@@ -57,16 +61,20 @@ func main() {
 
 	// 下载TableBundles资源
 	if Flag.Data.TableBundles {
-		TableBundlesCataLog, err := Catalog.GetTableBundles(AddressablesCatalogUrlRoot)
-		if err != nil {
-			panic(err)
-		}
 		var TableBundlesSavePath string
 		if Flag.Data.OriginalFileSave {
 			TableBundlesSavePath = path.Join("com.YostarJP.BlueArchive", "files", "TableBundles")
 		} else {
 			TableBundlesSavePath = path.Join("com.YostarJP.BlueArchive", "TableBundles")
 		}
+
+		// 获取Catalog文件
+		TableBundlesCataLog, err := Catalog.GetTableBundles(AddressablesCatalogUrlRoot, TableBundlesSavePath)
+		if err != nil {
+			panic(err)
+		}
+
+		// 下载资源
 		err = Download.TableBundles(AddressablesCatalogUrlRoot, TableBundlesCataLog, TableBundlesSavePath)
 		if err != nil {
 			panic(err)
@@ -75,16 +83,20 @@ func main() {
 
 	// 下载MediaResources资源
 	if Flag.Data.MediaResources {
-		MediaResourcesCataLog, err := Catalog.GetMediaResources(AddressablesCatalogUrlRoot)
-		if err != nil {
-			panic(err)
-		}
 		var MediaResourcesSavePath string
 		if Flag.Data.OriginalFileSave {
 			MediaResourcesSavePath = path.Join("com.YostarJP.BlueArchive", "files", "MediaPatch")
 		} else {
 			MediaResourcesSavePath = path.Join("com.YostarJP.BlueArchive", "MediaResources")
 		}
+
+		// 获取Catalog文件
+		MediaResourcesCataLog, err := Catalog.GetMediaResources(AddressablesCatalogUrlRoot,MediaResourcesSavePath)
+		if err != nil {
+			panic(err)
+		}
+
+		// 下载资源
 		err = Download.MediaResources(AddressablesCatalogUrlRoot, MediaResourcesCataLog, MediaResourcesSavePath)
 		if err != nil {
 			panic(err)
