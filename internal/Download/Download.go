@@ -17,6 +17,7 @@ import (
 	"net/http"
 	"os"
 	"path"
+	"strings"
 
 	"github.com/pierrec/xxHash/xxHash64"
 	"github.com/schollz/progressbar/v3"
@@ -108,6 +109,13 @@ func Resource(CatalogData []Catalog.Data, PathURL string, SavePath string, xxHas
 
 	// 遍历CatalogData
 	for _, Value := range CatalogData {
+		// 进行字符串过滤器筛选
+		if Flag.Data.Filter != "" {
+			if Find := strings.Contains(Value.Name, Flag.Data.Filter); !Find {
+				continue
+			}
+		}
+
 		CoroutinePool.Add(1)
 		go func(Value Catalog.Data) {
 			var FilePath string
