@@ -18,15 +18,13 @@ import (
 	"path"
 )
 
-func init() {
+func main() {
 	// 初始化参数
 	err := Flag.Init()
 	if err != nil {
 		panic(err)
 	}
-}
 
-func main() {
 	// 读取元数据
 	Mate, err := MateData.Get(Flag.Data.Version)
 	if err != nil {
@@ -91,7 +89,7 @@ func main() {
 		}
 
 		// 获取Catalog文件
-		MediaResourcesCataLog, err := Catalog.GetMediaResources(AddressablesCatalogUrlRoot,MediaResourcesSavePath)
+		MediaResourcesCataLog, err := Catalog.GetMediaResources(AddressablesCatalogUrlRoot, MediaResourcesSavePath)
 		if err != nil {
 			panic(err)
 		}
