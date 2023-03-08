@@ -37,23 +37,6 @@ func main() {
 
 	AddressablesCatalogUrlRoot := Mate.ConnectionGroups[0].OverrideConnectionGroups[len(Mate.ConnectionGroups[0].OverrideConnectionGroups)-1].AddressablesCatalogURLRoot
 
-	// 判断资源服务器是否可用
-	for {
-		_, Response, err := HTTP.Get(AddressablesCatalogUrlRoot + Catalog.TableBundlesCataLogPath)
-		if err != nil {
-			fmt.Println(err)
-			fmt.Println("资源服务器信息获取失败")
-			os.Exit(1)
-		}
-		if Response.StatusCode != 200 {
-			fmt.Println("资源服务器不可用，将会每隔5秒尝试连接一次，直到成功为止")
-			time.Sleep(5 * time.Second)
-			continue
-		} else {
-			break
-		}
-	}
-
 	// 下载AssetBundls资源
 	if Flag.Data.AssetBundls {
 		var AssetBundlsSavePath string
