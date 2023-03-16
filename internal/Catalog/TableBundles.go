@@ -54,14 +54,24 @@ func GetTableBundles(AddressablesCatalogUrlRoot string, SavePath string) ([]Data
 	}
 
 	// 转换为标准结构体
-	var TableBundlesData []Data
-	for _, Value := range TableBundles.Table {
-		TableBundlesData = append(TableBundlesData, Data{
+	TableBundlesData := TableBundles.ToData()
+
+	return TableBundlesData, nil
+}
+
+/**
+ * @description: 将TableBundlesOrigin转换为标准Catalog结构体
+ * @return {[]Data} CatLog数据
+ */
+func (Origin TableBundlesOrigin) ToData() []Data {
+	var CatalogDatas []Data
+	for _, Value := range Origin.Table {
+		CatalogDatas = append(CatalogDatas, Data{
 			Name: Value.Name,
 			Path: Value.Name,
 			Crc:  Value.Crc,
 		})
 	}
 
-	return TableBundlesData, nil
+	return CatalogDatas
 }

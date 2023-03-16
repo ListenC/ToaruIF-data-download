@@ -1,7 +1,7 @@
 /*
  * @Author: nijineko
  * @Date: 2023-03-03 23:34:33
- * @LastEditTime: 2023-03-04 13:11:15
+ * @LastEditTime: 2023-03-16 16:19:10
  * @LastEditors: nijineko
  * @Description: 读取MediaResources的CataLog文件到标准结构体
  * @FilePath: \DataDownload\internal\Catalog\MediaResources.go
@@ -55,14 +55,24 @@ func GetMediaResources(AddressablesCatalogUrlRoot string, SavePath string) ([]Da
 	}
 
 	// 转换为标准结构体
-	var MediaResourcesData []Data
-	for _, Value := range MediaResources.Table {
-		MediaResourcesData = append(MediaResourcesData, Data{
+	MediaResourcesData := MediaResources.ToData()
+
+	return MediaResourcesData, nil
+}
+
+/**
+ * @description: 将MediaResourcesOrigin转换为标准Catalog结构体
+ * @return {[]Data} CatLog数据
+ */
+func (Origin MediaResourcesOrigin) ToData() []Data {
+	var CatalogDatas []Data
+	for _, Value := range Origin.Table {
+		CatalogDatas = append(CatalogDatas, Data{
 			Name: Value.FileName,
 			Path: Value.Path,
 			Crc:  Value.Crc,
 		})
 	}
 
-	return MediaResourcesData, nil
+	return CatalogDatas
 }

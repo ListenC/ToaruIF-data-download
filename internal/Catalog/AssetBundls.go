@@ -51,14 +51,24 @@ func GetAssetBundls(AddressablesCatalogUrlRoot string, SavePath string) ([]Data,
 	}
 
 	// 转换为标准结构体
-	var AssetBundlsData []Data
-	for _, Value := range AssetBundls.BundleFiles {
-		AssetBundlsData = append(AssetBundlsData, Data{
+	AssetBundlsData := AssetBundls.ToData()
+
+	return AssetBundlsData, nil
+}
+
+/**
+ * @description: 将AssetBundlesOrigin转换为标准Catalog结构体
+ * @return {[]Data} CatLog数据
+ */
+func (Origin AssetBundlesOrigin) ToData() []Data {
+	var CatalogDatas []Data
+	for _, Value := range Origin.BundleFiles {
+		CatalogDatas = append(CatalogDatas, Data{
 			Name: Value.Name,
 			Path: Value.Name,
 			Crc:  Value.Crc,
 		})
 	}
 
-	return AssetBundlsData, nil
+	return CatalogDatas
 }
