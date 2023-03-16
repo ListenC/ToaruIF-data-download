@@ -18,6 +18,8 @@ BlueArchive游戏文件下载工具，使用Golang实现
     最大并发数 (default 10)
 -filter string
     字符串过滤器，只下载包含该字符串的文件
+-save_catalog
+    是否保存Catalog文件 (default true)
 -asset_bundls
     下载AssetBundls文件
 -media_resources

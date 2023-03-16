@@ -1,7 +1,7 @@
 /*
  * @Author: nijineko
  * @Date: 2023-03-03 22:58:53
- * @LastEditTime: 2023-03-04 13:17:49
+ * @LastEditTime: 2023-03-16 16:36:29
  * @LastEditors: nijineko
  * @Description: Catalog
  * @FilePath: \DataDownload\internal\Catalog\Catalog.go
@@ -9,6 +9,7 @@
 package Catalog
 
 import (
+	"BlueArchiveDataDownload/internal/Flag"
 	"os"
 	"path"
 )
@@ -31,6 +32,11 @@ type Data struct {
  * @return {error} 错误信息
  */
 func SaveJson(JsonBody []byte, SavePath string) error {
+	// 如果不保存CatLog文件则直接跳过
+	if !Flag.Data.SaveCatalog {
+		return nil
+	}
+
 	err := CreateFolder(path.Dir(SavePath))
 	if err != nil {
 		return err
