@@ -1,7 +1,7 @@
 /*
  * @Author: NyanCatda
  * @Date: 2023-03-03 22:42:20
- * @LastEditTime: 2023-03-08 18:00:37
+ * @LastEditTime: 2023-03-16 17:13:21
  * @LastEditors: nijineko
  * @Description: main file
  * @FilePath: \DataDownload\main.go
@@ -14,18 +14,22 @@ import (
 	"BlueArchiveDataDownload/internal/Flag"
 	"BlueArchiveDataDownload/internal/HTTP"
 	"BlueArchiveDataDownload/internal/MateData"
+	"BlueArchiveDataDownload/internal/Update"
 	"fmt"
 	"os"
 	"path"
 	"time"
 )
 
+var (
+	AssetBundlsSavePath    string // AssetBundls资源保存路径
+	TableBundlesSavePath   string // TableBundles资源保存路径
+	MediaResourcesSavePath string // MediaResources资源保存路径
+)
+
 func main() {
-	// 初始化参数
-	err := Flag.Init()
-	if err != nil {
-		panic(err)
-	}
+	// 启动程序
+	boot()
 
 	// 读取元数据
 	Mate, err := MateData.Get(Flag.Data.Version)
@@ -54,15 +58,48 @@ func main() {
 		}
 	}
 
+	// 判断是否以更新模式启动
+	if Flag.Data.Update {
+		bootUpdate(AddressablesCatalogUrlRoot)
+	}
+
+	// 默认以下载模式启动
+	bootDownload(AddressablesCatalogUrlRoot)
+}
+
+func boot() {
+	// 初始化参数
+	err := Flag.Init()
+	if err != nil {
+		panic(err)
+	}
+
+	// 计算文件保存路径
+	if Flag.Data.OriginalFileSave {
+		AssetBundlsSavePath = path.Join("com.YostarJP.BlueArchive", "files", "AssetBundls")
+	} else {
+		AssetBundlsSavePath = path.Join("com.YostarJP.BlueArchive", "AssetBundls")
+	}
+	if Flag.Data.OriginalFileSave {
+		TableBundlesSavePath = path.Join("com.YostarJP.BlueArchive", "files", "TableBundles")
+	} else {
+		TableBundlesSavePath = path.Join("com.YostarJP.BlueArchive", "TableBundles")
+	}
+	if Flag.Data.OriginalFileSave {
+		MediaResourcesSavePath = path.Join("com.YostarJP.BlueArchive", "files", "MediaPatch")
+	} else {
+		MediaResourcesSavePath = path.Join("com.YostarJP.BlueArchive", "MediaResources")
+	}
+}
+
+/**
+ * @description: 启动下载模式
+ * @param {string} AddressablesCatalogUrlRoot 资源服务器地址
+ * @return {*}
+ */
+func bootDownload(AddressablesCatalogUrlRoot string) {
 	// 下载AssetBundls资源
 	if Flag.Data.AssetBundls {
-		var AssetBundlsSavePath string
-		if Flag.Data.OriginalFileSave {
-			AssetBundlsSavePath = path.Join("com.YostarJP.BlueArchive", "files", "AssetBundls")
-		} else {
-			AssetBundlsSavePath = path.Join("com.YostarJP.BlueArchive", "AssetBundls")
-		}
-
 		// 获取Catalog文件
 		AssetBundlsCataLog, err := Catalog.GetAssetBundls(AddressablesCatalogUrlRoot, AssetBundlsSavePath)
 		if err != nil {
@@ -78,13 +115,6 @@ func main() {
 
 	// 下载TableBundles资源
 	if Flag.Data.TableBundles {
-		var TableBundlesSavePath string
-		if Flag.Data.OriginalFileSave {
-			TableBundlesSavePath = path.Join("com.YostarJP.BlueArchive", "files", "TableBundles")
-		} else {
-			TableBundlesSavePath = path.Join("com.YostarJP.BlueArchive", "TableBundles")
-		}
-
 		// 获取Catalog文件
 		TableBundlesCataLog, err := Catalog.GetTableBundles(AddressablesCatalogUrlRoot, TableBundlesSavePath)
 		if err != nil {
@@ -100,13 +130,6 @@ func main() {
 
 	// 下载MediaResources资源
 	if Flag.Data.MediaResources {
-		var MediaResourcesSavePath string
-		if Flag.Data.OriginalFileSave {
-			MediaResourcesSavePath = path.Join("com.YostarJP.BlueArchive", "files", "MediaPatch")
-		} else {
-			MediaResourcesSavePath = path.Join("com.YostarJP.BlueArchive", "MediaResources")
-		}
-
 		// 获取Catalog文件
 		MediaResourcesCataLog, err := Catalog.GetMediaResources(AddressablesCatalogUrlRoot, MediaResourcesSavePath)
 		if err != nil {
@@ -121,5 +144,39 @@ func main() {
 	}
 
 	fmt.Println("下载完成")
+	os.Exit(0)
+}
+
+/**
+ * @description: 启动更新模式
+ * @param {string} AddressablesCatalogUrlRoot 资源服务器地址
+ * @return {*}
+ */
+func bootUpdate(AddressablesCatalogUrlRoot string) {
+	// 更新AssetBundls资源
+	if Flag.Data.AssetBundls {
+		err := Update.AssetBundls(AddressablesCatalogUrlRoot, AssetBundlsSavePath)
+		if err != nil {
+			panic(err)
+		}
+	}
+
+	// 更新TableBundles资源
+	if Flag.Data.TableBundles {
+		err := Update.TableBundles(AddressablesCatalogUrlRoot, TableBundlesSavePath)
+		if err != nil {
+			panic(err)
+		}
+	}
+
+	// 更新MediaResources资源
+	if Flag.Data.MediaResources {
+		err := Update.MediaResources(AddressablesCatalogUrlRoot, MediaResourcesSavePath)
+		if err != nil {
+			panic(err)
+		}
+	}
+
+	fmt.Println("更新完成")
 	os.Exit(0)
 }

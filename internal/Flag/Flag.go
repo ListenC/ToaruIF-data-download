@@ -16,9 +16,10 @@ type Flag struct {
 	MaxPool          int    // 最大并发数
 	Filter           string // 字符串过滤器，只下载包含该字符串的文件
 	SaveCatalog      bool   // 是否保存Catalog文件
-	AssetBundls      bool   // 下载AssetBundls文件
-	TableBundles     bool   // 下载TableBundles文件
-	MediaResources   bool   // 下载MediaResources文件
+	Update           bool   // 以更新模式启动程序
+	AssetBundls      bool   // 下载/更新AssetBundls文件
+	TableBundles     bool   // 下载/更新TableBundles文件
+	MediaResources   bool   // 下载/更新MediaResources文件
 }
 
 var Data Flag
@@ -34,9 +35,10 @@ func Init() error {
 	MaxPool := flag.Int("max_pool", 10, "最大并发数")
 	Filter := flag.String("filter", "", "字符串过滤器，只下载包含该字符串的文件")
 	SaveCatalog := flag.Bool("save_catalog", true, "是否保存Catalog文件")
-	AssetBundls := flag.Bool("asset_bundls", false, "下载AssetBundls文件")
-	TableBundles := flag.Bool("table_bundles", false, "下载TableBundles文件")
-	MediaResources := flag.Bool("media_resources", false, "下载MediaResources文件")
+	Update := flag.Bool("update", false, "以更新模式启动程序")
+	AssetBundls := flag.Bool("asset_bundls", false, "下载/更新AssetBundls文件")
+	TableBundles := flag.Bool("table_bundles", false, "下载/更新TableBundles文件")
+	MediaResources := flag.Bool("media_resources", false, "下载/更新MediaResources文件")
 	flag.Parse()
 
 	// 参数写入变量
@@ -45,6 +47,7 @@ func Init() error {
 	Data.MaxPool = *MaxPool
 	Data.Filter = *Filter
 	Data.SaveCatalog = *SaveCatalog
+	Data.Update = *Update
 	if *AssetBundls || *TableBundles || *MediaResources {
 		Data.AssetBundls = *AssetBundls
 		Data.TableBundles = *TableBundles
