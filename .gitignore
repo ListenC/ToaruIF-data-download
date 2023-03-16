@@ -17,5 +17,5 @@
 
 com.YostarJP.BlueArchive
 
-start.bat
-start.sh
+*.bat
+*.sh
