@@ -21,8 +21,6 @@ import (
  * @return {error} 错误信息
  */
 func MediaResources(AddressablesCatalogURLRoot string, CatalogData []Catalog.Data, SavePath string) error {
-	var MediaResourcesURLPath = "/MediaResources/"
-
 	fmt.Println("开始下载MediaResources文件")
 	return Resource(CatalogData, AddressablesCatalogURLRoot+MediaResourcesURLPath, SavePath, true)
 }

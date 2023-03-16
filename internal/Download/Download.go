@@ -23,6 +23,10 @@ import (
 	"github.com/schollz/progressbar/v3"
 )
 
+var AndroidAssetBundlsURLPath = "/Android/"
+var MediaResourcesURLPath = "/MediaResources/"
+var TableBundlesURLPath = "/TableBundles/"
+
 /**
  * @description: 下载文件并显示进度条
  * @param {string} URL 文件地址

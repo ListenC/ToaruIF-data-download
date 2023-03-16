@@ -21,8 +21,6 @@ import (
  * @return {error} 错误信息
  */
 func TableBundles(AddressablesCatalogURLRoot string, CatalogData []Catalog.Data, SavePath string) error {
-	var TableBundlesURLPath = "/TableBundles/"
-
 	fmt.Println("开始下载TableBundles文件")
 	return Resource(CatalogData, AddressablesCatalogURLRoot+TableBundlesURLPath, SavePath, true)
 }

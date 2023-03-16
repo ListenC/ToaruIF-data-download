@@ -21,8 +21,6 @@ import (
  * @return {error} 错误信息
  */
 func AssetBundls(AddressablesCatalogURLRoot string, CatalogData []Catalog.Data, SavePath string) error {
-	var AndroidAssetBundlsURLPath = "/Android/"
-
 	fmt.Println("开始下载AssetBundls文件")
 	return Resource(CatalogData, AddressablesCatalogURLRoot+AndroidAssetBundlsURLPath, SavePath, false)
 }
