@@ -1,7 +1,7 @@
 /*
  * @Author: nijineko
  * @Date: 2023-03-16 15:59:52
- * @LastEditTime: 2023-03-16 20:44:07
+ * @LastEditTime: 2023-03-19 02:00:19
  * @LastEditors: nijineko
  * @Description: 更新模块
  * @FilePath: \DataDownload\internal\Update\Update.go
@@ -20,7 +20,7 @@ import (
  */
 func CompareDataCrc(SrcData []Catalog.Data, DestData []Catalog.Data) []Catalog.Data {
 	// 将源数据转换为以文件Path为Key，文件Crc为Value的Map
-	SrcDataMap := make(map[string]int)
+	SrcDataMap := make(map[string]uint32)
 	for _, Value := range SrcData {
 		SrcDataMap[Value.Path] = Value.Crc
 	}

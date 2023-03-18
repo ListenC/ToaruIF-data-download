@@ -1,7 +1,7 @@
 /*
  * @Author: nijineko
  * @Date: 2023-03-03 23:43:42
- * @LastEditTime: 2023-03-04 16:37:52
+ * @LastEditTime: 2023-03-19 01:55:15
  * @LastEditors: nijineko
  * @Description: 下载文件
  * @FilePath: \DataDownload\internal\Download\Download.go
@@ -11,6 +11,7 @@ package Download
 import (
 	"BlueArchiveDataDownload/internal/Catalog"
 	"BlueArchiveDataDownload/internal/Flag"
+	"BlueArchiveDataDownload/tools/CRC"
 	"BlueArchiveDataDownload/tools/Pool"
 	"fmt"
 	"io"
@@ -30,30 +31,31 @@ var TableBundlesURLPath = "/TableBundles/"
 /**
  * @description: 下载文件并显示进度条
  * @param {string} URL 文件地址
- * @param {string} SavePath 保存路径
+ * @param {string} FileSavePath 文件保存路径
  * @return {int64} 文件大小
+ * @return {uint32} 文件CRC32
  * @return {error} 错误信息
  */
-func File(URL string, SavePath string) (int64, error) {
+func File(URL string, FileSavePath string) (int64, uint32, error) {
 	Request, err := http.NewRequest("GET", URL, nil)
 	if err != nil {
-		return 0, err
+		return 0, 0, err
 	}
 
 	// 发起请求
 	Client, err := http.DefaultClient.Do(Request)
 	if err != nil {
-		return 0, err
+		return 0, 0, err
 	}
 	defer Client.Body.Close()
 
-	err = CreateFolder(path.Dir(SavePath))
+	err = CreateFolder(path.Dir(FileSavePath))
 	if err != nil {
-		return 0, err
+		return 0, 0, err
 	}
-	File, err := os.OpenFile(SavePath, os.O_CREATE|os.O_WRONLY, 0644)
+	File, err := os.OpenFile(FileSavePath, os.O_CREATE|os.O_WRONLY, 0644)
 	if err != nil {
-		return 0, err
+		return 0, 0, err
 	}
 	defer File.Close()
 
@@ -75,10 +77,13 @@ func File(URL string, SavePath string) (int64, error) {
 	// 写入文件
 	Size, err := io.Copy(io.MultiWriter(File, Progressbar), Client.Body)
 	if err != nil {
-		return 0, err
+		return 0, 0, err
 	}
 
-	return Size, nil
+	// 计算文件CRC
+	CRC := CRC.Checksum(FileSavePath)
+
+	return Size, CRC, nil
 }
 
 /**
@@ -133,11 +138,22 @@ func Resource(CatalogData []Catalog.Data, PathURL string, SavePath string, xxHas
 			}
 
 			// 下载文件
-			Size, err := File(PathURL+Value.Path, FilePath)
-			if err != nil {
-				fmt.Printf("文件 %s 下载失败，请检查网络问题\n", Value.Path)
-			} else {
-				fmt.Printf("文件 %s 下载完成，大小为 %dbytes\n", Value.Path, Size)
+			for {
+				Size, CRC, err := File(PathURL+Value.Path, FilePath)
+				if err != nil {
+					fmt.Println(err)
+					fmt.Printf("文件 %s 下载失败，正在重试\n", Value.Path)
+					continue
+				} else {
+					// 判断CRC是否正确
+					if CRC != Value.Crc {
+						fmt.Printf("文件 %s 下载失败，CRC不匹配，正在重试\n", Value.Path)
+						continue
+					}
+
+					fmt.Printf("文件 %s 下载完成，大小为 %dbytes\n", Value.Path, Size)
+					break
+				}
 			}
 
 			CoroutinePool.Done()

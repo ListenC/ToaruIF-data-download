@@ -1,7 +1,7 @@
 /*
  * @Author: nijineko
  * @Date: 2023-03-03 23:28:57
- * @LastEditTime: 2023-03-04 13:21:40
+ * @LastEditTime: 2023-03-19 01:59:43
  * @LastEditors: nijineko
  * @Description: 读取AssetBundls的CataLog文件到标准结构体
  * @FilePath: \DataDownload\internal\Catalog\AssetBundls.go
@@ -19,7 +19,7 @@ type AssetBundlesOrigin struct {
 		Name      string `json:"Name"`      // 文件名字
 		Size      int    `json:"Size"`      // 文件大小
 		IsInbuild bool   `json:"isInbuild"` // 是否为内置文件
-		Crc       int    `json:"Crc"`       // 文件CRC
+		Crc       uint32 `json:"Crc"`       // 文件CRC
 	} `json:"BundleFiles"`
 }
 

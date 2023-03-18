@@ -22,7 +22,7 @@ type MediaResourcesOrigin struct {
 		Path      string `json:"path"`      // 路径
 		FileName  string `json:"fileName"`  // 文件名
 		Bytes     int    `json:"bytes"`     // 文件大小
-		Crc       int    `json:"Crc"`       // 文件CRC
+		Crc       uint32 `json:"Crc"`       // 文件CRC
 	} `json:"Table"`
 	MediaList any `json:"MediaList"`
 }

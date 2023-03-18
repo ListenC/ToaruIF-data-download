@@ -22,7 +22,7 @@ var MediaResourcesCataLogPath = "/MediaResources/MediaCatalog.json"    // MediaR
 type Data struct {
 	Name string `json:"Name"`
 	Path string `json:"Path"`
-	Crc  int    `json:"Crc"`
+	Crc  uint32    `json:"Crc"`
 }
 
 /**

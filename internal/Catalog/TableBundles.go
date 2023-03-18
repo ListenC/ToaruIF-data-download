@@ -18,7 +18,7 @@ type TableBundlesOrigin struct {
 	Table map[string]struct {
 		Name      string   `json:"Name"`      // 文件名字
 		Size      int      `json:"Size"`      // 文件大小
-		Crc       int      `json:"Crc"`       // 文件CRC
+		Crc       uint32   `json:"Crc"`       // 文件CRC
 		IsInbuild bool     `json:"isInbuild"` // 是否为内置文件
 		IsChanged bool     `json:"isChanged"` // 是否被修改
 		Includes  []string `json:"Includes"`  // 包含的文件
