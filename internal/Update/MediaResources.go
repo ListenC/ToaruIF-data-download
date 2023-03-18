@@ -11,10 +11,7 @@ package Update
 import (
 	"BlueArchiveDataDownload/internal/Catalog"
 	"BlueArchiveDataDownload/internal/Download"
-	"encoding/json"
-	"os"
-	"path"
-	"path/filepath"
+	"fmt"
 )
 
 /**
@@ -24,27 +21,22 @@ import (
  * @return {error} error
  */
 func MediaResources(AddressablesCatalogUrlRoot string, SavePath string) error {
-	// 获取本地MediaResources Catalog
-	LocalCatalogFile, err := os.ReadFile(path.Join(SavePath, filepath.Base(Catalog.MediaResourcesCataLogPath)))
-	if err != nil {
-		return err
-	}
-	var LocalCatalog Catalog.MediaResourcesOrigin
-	err = json.Unmarshal(LocalCatalogFile, &LocalCatalog)
-	if err != nil {
-		return err
-	}
-	// 转换为标准结构体
-	LocalCatalogData := LocalCatalog.ToData()
-
 	// 获取远程MediaResources Catalog
 	RemoteCatalogData, err := Catalog.GetMediaResources(AddressablesCatalogUrlRoot, SavePath)
 	if err != nil {
 		return err
 	}
 
-	// 比较两个Catalog，获取需要更新的文件
-	NeedUpdateFiles := CompareDataCrc(LocalCatalogData, RemoteCatalogData)
+	// 对比本地文件与远程Catalog的CRC
+	fmt.Println("开始检查MediaResources文件是否需要更新")
+	NeedUpdateFiles := CheckFileCRC(SavePath, RemoteCatalogData, true)
+
+	if len(NeedUpdateFiles) == 0 {
+		fmt.Println("MediaResources文件无需更新")
+		return nil
+	} else {
+		fmt.Printf("共有%d个MediaResources文件需要更新，开始下载\n", len(NeedUpdateFiles))
+	}
 
 	// 下载需要更新的文件
 	err = Download.Resource(NeedUpdateFiles, AddressablesCatalogUrlRoot+Download.MediaResourcesURLPath, SavePath, true)

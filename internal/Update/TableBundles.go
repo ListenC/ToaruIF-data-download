@@ -1,7 +1,7 @@
 /*
  * @Author: nijineko
  * @Date: 2023-03-16 16:05:15
- * @LastEditTime: 2023-03-16 16:45:59
+ * @LastEditTime: 2023-03-19 02:16:03
  * @LastEditors: nijineko
  * @Description: 更新TableBundles
  * @FilePath: \DataDownload\internal\Update\TableBundles.go
@@ -11,10 +11,7 @@ package Update
 import (
 	"BlueArchiveDataDownload/internal/Catalog"
 	"BlueArchiveDataDownload/internal/Download"
-	"encoding/json"
-	"os"
-	"path"
-	"path/filepath"
+	"fmt"
 )
 
 /**
@@ -24,27 +21,22 @@ import (
  * @return {error} error
  */
 func TableBundles(AddressablesCatalogUrlRoot string, SavePath string) error {
-	// 获取本地TableBundles Catalog
-	LocalCatalogFile, err := os.ReadFile(path.Join(SavePath, filepath.Base(Catalog.TableBundlesCataLogPath)))
-	if err != nil {
-		return err
-	}
-	var LocalCatalog Catalog.TableBundlesOrigin
-	err = json.Unmarshal(LocalCatalogFile, &LocalCatalog)
-	if err != nil {
-		return err
-	}
-	// 转换为标准结构体
-	LocalCatalogData := LocalCatalog.ToData()
-
 	// 获取远程TableBundles Catalog
 	RemoteCatalogData, err := Catalog.GetTableBundles(AddressablesCatalogUrlRoot, SavePath)
 	if err != nil {
 		return err
 	}
 
-	// 比较两个Catalog，获取需要更新的文件
-	NeedUpdateFiles := CompareDataCrc(LocalCatalogData, RemoteCatalogData)
+	// 对比本地文件与远程Catalog的CRC
+	fmt.Println("开始检查TableBundles文件是否需要更新")
+	NeedUpdateFiles := CheckFileCRC(SavePath, RemoteCatalogData, true)
+
+	if len(NeedUpdateFiles) == 0 {
+		fmt.Println("TableBundles文件无需更新")
+		return nil
+	} else {
+		fmt.Printf("共有%d个TableBundles文件需要更新，开始下载", len(NeedUpdateFiles))
+	}
 
 	// 下载需要更新的文件
 	err = Download.Resource(NeedUpdateFiles, AddressablesCatalogUrlRoot+Download.TableBundlesURLPath, SavePath, true)

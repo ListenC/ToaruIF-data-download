@@ -1,7 +1,7 @@
 /*
  * @Author: nijineko
  * @Date: 2023-03-03 23:43:42
- * @LastEditTime: 2023-03-19 01:55:15
+ * @LastEditTime: 2023-03-19 02:59:26
  * @LastEditors: nijineko
  * @Description: 下载文件
  * @FilePath: \DataDownload\internal\Download\Download.go
@@ -132,7 +132,7 @@ func Resource(CatalogData []Catalog.Data, PathURL string, SavePath string, xxHas
 			if Flag.Data.OriginalFileSave && xxHash {
 				// 计算文件名
 				FileName := fmt.Sprintf("%d", xxHash64.Checksum([]byte(Value.Name), 0))
-				FilePath = path.Join(SavePath, FileName)
+				FilePath = path.Join(SavePath, path.Join(path.Dir(Value.Path), FileName))
 			} else {
 				FilePath = path.Join(SavePath, Value.Path)
 			}
