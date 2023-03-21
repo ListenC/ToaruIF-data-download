@@ -1,7 +1,7 @@
 /*
  * @Author: nijineko
  * @Date: 2023-03-03 23:28:57
- * @LastEditTime: 2023-03-19 01:59:43
+ * @LastEditTime: 2023-03-21 14:06:32
  * @LastEditors: nijineko
  * @Description: 读取AssetBundls的CataLog文件到标准结构体
  * @FilePath: \DataDownload\internal\Catalog\AssetBundls.go
@@ -9,6 +9,7 @@
 package Catalog
 
 import (
+	"BlueArchiveDataDownload/internal/Flag"
 	"BlueArchiveDataDownload/internal/HTTP"
 	"encoding/json"
 	"path"
@@ -63,6 +64,11 @@ func GetAssetBundls(AddressablesCatalogUrlRoot string, SavePath string) ([]Data,
 func (Origin AssetBundlesOrigin) ToData() []Data {
 	var CatalogDatas []Data
 	for _, Value := range Origin.BundleFiles {
+		// 如果忽略内置文件并且当前文件为内置文件则跳过
+		if !Flag.Data.IgnoreInbuild && Value.IsInbuild {
+			continue
+		}
+
 		CatalogDatas = append(CatalogDatas, Data{
 			Name: Value.Name,
 			Path: Value.Name,

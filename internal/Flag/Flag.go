@@ -15,6 +15,7 @@ type Flag struct {
 	OriginalFileSave bool   // 是否以原始文件的名字和路径保存
 	MaxPool          int    // 最大并发数
 	Filter           string // 字符串过滤器，只下载包含该字符串的文件
+	IgnoreInbuild    bool   // 忽略APK内置文件
 	SaveCatalog      bool   // 是否保存Catalog文件
 	Update           bool   // 以更新模式启动程序
 	UpdateCopy       bool   // 更新模式下复制新文件到UpdateData目录下储存
@@ -35,6 +36,7 @@ func Init() error {
 	OriginalFileSave := flag.Bool("original_file_save", false, "是否以原始文件的名字和路径保存")
 	MaxPool := flag.Int("max_pool", 10, "最大并发数")
 	Filter := flag.String("filter", "", "字符串过滤器，只下载包含该字符串的文件")
+	IgnoreInbuild := flag.Bool("ignore_inbuild", false, "忽略APK内置文件")
 	SaveCatalog := flag.Bool("save_catalog", true, "是否保存Catalog文件")
 	Update := flag.Bool("update", false, "以更新模式启动程序")
 	UpdateCopy := flag.Bool("update_copy", false, "更新模式下复制新文件到UpdateData目录下储存")
@@ -48,6 +50,7 @@ func Init() error {
 	Data.OriginalFileSave = *OriginalFileSave
 	Data.MaxPool = *MaxPool
 	Data.Filter = *Filter
+	Data.IgnoreInbuild = *IgnoreInbuild
 	Data.SaveCatalog = *SaveCatalog
 	Data.Update = *Update
 	Data.UpdateCopy = *UpdateCopy

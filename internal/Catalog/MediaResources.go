@@ -1,7 +1,7 @@
 /*
  * @Author: nijineko
  * @Date: 2023-03-03 23:34:33
- * @LastEditTime: 2023-03-16 16:19:10
+ * @LastEditTime: 2023-03-21 14:06:21
  * @LastEditors: nijineko
  * @Description: 读取MediaResources的CataLog文件到标准结构体
  * @FilePath: \DataDownload\internal\Catalog\MediaResources.go
@@ -9,6 +9,7 @@
 package Catalog
 
 import (
+	"BlueArchiveDataDownload/internal/Flag"
 	"BlueArchiveDataDownload/internal/HTTP"
 	"encoding/json"
 	"path"
@@ -67,6 +68,11 @@ func GetMediaResources(AddressablesCatalogUrlRoot string, SavePath string) ([]Da
 func (Origin MediaResourcesOrigin) ToData() []Data {
 	var CatalogDatas []Data
 	for _, Value := range Origin.Table {
+		// 如果忽略内置文件并且当前文件为内置文件则跳过
+		if !Flag.Data.IgnoreInbuild && Value.IsInbuild {
+			continue
+		}
+
 		CatalogDatas = append(CatalogDatas, Data{
 			Name: Value.FileName,
 			Path: Value.Path,

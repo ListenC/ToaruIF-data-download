@@ -9,6 +9,7 @@
 package Catalog
 
 import (
+	"BlueArchiveDataDownload/internal/Flag"
 	"BlueArchiveDataDownload/internal/HTTP"
 	"encoding/json"
 	"path"
@@ -66,6 +67,11 @@ func GetTableBundles(AddressablesCatalogUrlRoot string, SavePath string) ([]Data
 func (Origin TableBundlesOrigin) ToData() []Data {
 	var CatalogDatas []Data
 	for _, Value := range Origin.Table {
+		// 如果忽略内置文件并且当前文件为内置文件则跳过
+		if !Flag.Data.IgnoreInbuild && Value.IsInbuild {
+			continue
+		}
+
 		CatalogDatas = append(CatalogDatas, Data{
 			Name: Value.Name,
 			Path: Value.Name,
