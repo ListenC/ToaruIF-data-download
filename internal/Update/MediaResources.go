@@ -1,7 +1,7 @@
 /*
  * @Author: nijineko
  * @Date: 2023-03-16 16:58:21
- * @LastEditTime: 2023-03-16 17:19:33
+ * @LastEditTime: 2023-03-21 12:44:14
  * @LastEditors: nijineko
  * @Description: 更新MediaResources
  * @FilePath: \DataDownload\internal\Update\MediaResources.go
@@ -11,6 +11,7 @@ package Update
 import (
 	"BlueArchiveDataDownload/internal/Catalog"
 	"BlueArchiveDataDownload/internal/Download"
+	"BlueArchiveDataDownload/internal/Flag"
 	"fmt"
 )
 
@@ -42,6 +43,14 @@ func MediaResources(AddressablesCatalogUrlRoot string, SavePath string) error {
 	err = Download.Resource(NeedUpdateFiles, AddressablesCatalogUrlRoot+Download.MediaResourcesURLPath, SavePath, true)
 	if err != nil {
 		return err
+	}
+
+	// 复制更新的文件
+	if Flag.Data.UpdateCopy {
+		err = CopyFile(SavePath, NeedUpdateFiles, true)
+		if err != nil {
+			return err
+		}
 	}
 
 	return nil

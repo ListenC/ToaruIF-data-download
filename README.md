@@ -1,3 +1,11 @@
+<!--
+ * @Author: nijineko
+ * @Date: 2023-03-04 02:24:45
+ * @LastEditTime: 2023-03-21 12:57:47
+ * @LastEditors: nijineko
+ * @Description: 
+ * @FilePath: \DataDownload\README.md
+-->
 # blue-archive-data-download
 BlueArchive游戏文件下载工具，使用Golang实现
 ![example](example.gif)
@@ -22,6 +30,8 @@ BlueArchive游戏文件下载工具，使用Golang实现
     是否保存Catalog文件 (default true)
 -update
     以更新模式启动程序
+-update_copy
+    更新模式下复制新文件到UpdateData目录下储存
 -asset_bundls
     下载/更新AssetBundls文件
 -media_resources

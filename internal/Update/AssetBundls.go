@@ -1,7 +1,7 @@
 /*
  * @Author: nijineko
  * @Date: 2023-03-16 16:52:45
- * @LastEditTime: 2023-03-19 03:00:55
+ * @LastEditTime: 2023-03-21 12:49:24
  * @LastEditors: nijineko
  * @Description: 更新AssetBundls
  * @FilePath: \DataDownload\internal\Update\AssetBundls.go
@@ -11,6 +11,7 @@ package Update
 import (
 	"BlueArchiveDataDownload/internal/Catalog"
 	"BlueArchiveDataDownload/internal/Download"
+	"BlueArchiveDataDownload/internal/Flag"
 	"fmt"
 )
 
@@ -42,6 +43,14 @@ func AssetBundls(AddressablesCatalogUrlRoot string, SavePath string) error {
 	err = Download.Resource(NeedUpdateFiles, AddressablesCatalogUrlRoot+Download.AndroidAssetBundlsURLPath, SavePath, false)
 	if err != nil {
 		return err
+	}
+
+	// 复制更新的文件
+	if Flag.Data.UpdateCopy {
+		err = CopyFile(SavePath, NeedUpdateFiles, false)
+		if err != nil {
+			return err
+		}
 	}
 
 	return nil
