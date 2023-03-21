@@ -132,7 +132,7 @@ func Resource(CatalogData []Catalog.Data, PathURL string, SavePath string, xxHas
 			if Flag.Data.OriginalFileSave && xxHash {
 				// 计算文件名
 				FileName := fmt.Sprintf("%d", xxHash64.Checksum([]byte(Value.Name), 0))
-				FilePath = path.Join(SavePath, path.Join(path.Dir(Value.Path), FileName))
+				FilePath = path.Join(SavePath, FileName)
 			} else {
 				FilePath = path.Join(SavePath, Value.Path)
 			}

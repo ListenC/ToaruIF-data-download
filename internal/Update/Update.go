@@ -34,7 +34,7 @@ func CheckFileCRC(SavePath string, CatalogData []Catalog.Data, xxHash bool) []Ca
 		var FileCRC uint32
 		if Flag.Data.OriginalFileSave && xxHash {
 			FileName := fmt.Sprintf("%d", xxHash64.Checksum([]byte(Value.Name), 0))
-			FileCRC = CRC.Checksum(path.Join(SavePath, path.Join(path.Dir(Value.Path), FileName)))
+			FileCRC = CRC.Checksum(path.Join(SavePath, FileName))
 		} else {
 			FileCRC = CRC.Checksum(path.Join(SavePath, Value.Path))
 		}
@@ -61,7 +61,7 @@ func CopyFile(SavePath string, CatalogData []Catalog.Data, xxHash bool) error {
 		var FileName string
 		if Flag.Data.OriginalFileSave && xxHash {
 			FileName = fmt.Sprintf("%d", xxHash64.Checksum([]byte(Value.Name), 0))
-			FilePath = path.Join(SavePath, path.Join(path.Dir(Value.Path), FileName))
+			FilePath = path.Join(SavePath, FileName)
 		} else {
 			FilePath = path.Join(SavePath, Value.Path)
 		}
