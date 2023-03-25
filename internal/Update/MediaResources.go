@@ -1,7 +1,7 @@
 /*
  * @Author: nijineko
  * @Date: 2023-03-16 16:58:21
- * @LastEditTime: 2023-03-21 12:44:14
+ * @LastEditTime: 2023-03-26 04:07:05
  * @LastEditors: nijineko
  * @Description: 更新MediaResources
  * @FilePath: \DataDownload\internal\Update\MediaResources.go
@@ -13,6 +13,7 @@ import (
 	"BlueArchiveDataDownload/internal/Download"
 	"BlueArchiveDataDownload/internal/Flag"
 	"fmt"
+	"path"
 )
 
 /**
@@ -34,7 +35,6 @@ func MediaResources(AddressablesCatalogUrlRoot string, SavePath string) error {
 
 	if len(NeedUpdateFiles) == 0 {
 		fmt.Println("MediaResources文件无需更新")
-		return nil
 	} else {
 		fmt.Printf("共有%d个MediaResources文件需要更新，开始下载\n", len(NeedUpdateFiles))
 	}
@@ -50,6 +50,20 @@ func MediaResources(AddressablesCatalogUrlRoot string, SavePath string) error {
 		err = CopyFile(SavePath, NeedUpdateFiles, true)
 		if err != nil {
 			return err
+		}
+	}
+
+	// 清理过期的文件
+	if Flag.Data.UpdateClean {
+		fmt.Println("开始清理过期的MediaResources文件")
+		DeleteFiles, err := CleanFile(SavePath, path.Join(SavePath, path.Base(Catalog.MediaResourcesCataLogPath)), RemoteCatalogData, true)
+		if err != nil {
+			return err
+		}
+		if len(DeleteFiles) != 0 {
+			fmt.Printf("已删除%d个过期的MediaResources文件\n", len(DeleteFiles))
+		} else {
+			fmt.Println("没有过期的MediaResources文件")
 		}
 	}
 

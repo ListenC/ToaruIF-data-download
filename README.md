@@ -34,6 +34,8 @@ BlueArchive游戏文件下载工具，使用Golang实现
     以更新模式启动程序
 -update_copy
     更新模式下复制新文件到UpdateData目录下储存
+-update_clean
+    更新模式下清理过期文件
 -asset_bundls
     下载/更新AssetBundls文件
 -media_resources

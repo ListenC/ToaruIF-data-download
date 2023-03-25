@@ -1,7 +1,7 @@
 /*
  * @Author: nijineko
  * @Date: 2023-03-16 15:59:52
- * @LastEditTime: 2023-03-21 12:48:17
+ * @LastEditTime: 2023-03-26 03:57:55
  * @LastEditors: nijineko
  * @Description: 更新模块
  * @FilePath: \DataDownload\internal\Update\Update.go
@@ -16,6 +16,7 @@ import (
 	"io"
 	"os"
 	"path"
+	"path/filepath"
 
 	"github.com/pierrec/xxHash/xxHash64"
 )
@@ -101,4 +102,96 @@ func CopyFile(SavePath string, CatalogData []Catalog.Data, xxHash bool) error {
 	}
 
 	return nil
+}
+
+/**
+ * @description: 删除多余文件
+ * @param {string} SavePath	文件保存路径
+ * @param {string} CatalogPath 本地Catalog文件路径
+ * @param {[]Catalog.Data} CatalogData Catalog数据
+ * @param {bool} xxHash OriginalFileSave模式下是否使用xxHash64计算文件名
+ * @return {[]string} 删除文件路径
+ */
+func CleanFile(SavePath string, CatalogPath string, CatalogData []Catalog.Data, xxHash bool) ([]string, error) {
+	// 遍历CatalogData，转换为map
+	CatalogDataMap := make(map[string]struct{})
+	for _, Value := range CatalogData {
+		// 计算文件路径
+		var FilePath string
+		if Flag.Data.OriginalFileSave && xxHash {
+			FileName := fmt.Sprintf("%d", xxHash64.Checksum([]byte(Value.Name), 0))
+			FilePath = path.Join(SavePath, FileName)
+		} else {
+			FilePath = path.Join(SavePath, Value.Path)
+		}
+
+		CatalogDataMap[FilePath] = struct{}{}
+	}
+
+	// 遍历本地文件
+	FilePaths, err := getFilePaths(SavePath)
+	if err != nil {
+		return nil, err
+	}
+
+	var DeleteFilePaths []string
+	for _, Value := range FilePaths {
+		// 转换路径为正斜杠
+		FilePath := filepath.ToSlash(Value)
+
+		// 跳过Catalog文件
+		if FilePath == CatalogPath {
+			continue
+		}
+
+		// 判断文件是否在CatalogDataMap中
+		if _, Find := CatalogDataMap[FilePath]; !Find {
+			DeleteFilePaths = append(DeleteFilePaths, FilePath)
+
+			// 删除文件
+			err := os.Remove(FilePath)
+			if err != nil {
+				return nil, err
+			}
+		}
+	}
+
+	return DeleteFilePaths, nil
+}
+
+/**
+ * @description: 遍历出所有文件夹内文件路径
+ * @param {string} DirPth
+ * @return {[]string} 文件路径
+ * @return {error} 错误
+ */
+func getFilePaths(DirPth string) ([]string, error) {
+	DirPth = filepath.Clean(DirPth)
+	var dirs []string
+	dir, err := os.ReadDir(DirPth)
+	if err != nil {
+		return nil, err
+	}
+
+	PthSep := string(os.PathSeparator)
+
+	var Files []string
+	for _, fi := range dir {
+		if fi.IsDir() { // 目录, 递归遍历
+			dirs = append(dirs, filepath.Clean(DirPth+PthSep+fi.Name()))
+			getFilePaths(DirPth + PthSep + fi.Name())
+		} else {
+			Files = append(Files, filepath.Clean(DirPth+PthSep+fi.Name()))
+		}
+	}
+
+	// 读取子目录下文件
+	for _, table := range dirs {
+		temp, _ := getFilePaths(table)
+		for _, temp1 := range temp {
+			Files = append(Files, filepath.Clean(temp1))
+		}
+	}
+
+	return Files, nil
 }

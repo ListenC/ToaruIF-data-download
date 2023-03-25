@@ -19,6 +19,7 @@ type Flag struct {
 	SaveCatalog      bool   // 是否保存Catalog文件
 	Update           bool   // 以更新模式启动程序
 	UpdateCopy       bool   // 更新模式下复制新文件到UpdateData目录下储存
+	UpdateClean      bool   // 更新模式下清理过期文件
 	AssetBundls      bool   // 下载/更新AssetBundls文件
 	TableBundles     bool   // 下载/更新TableBundles文件
 	MediaResources   bool   // 下载/更新MediaResources文件
@@ -40,6 +41,7 @@ func Init() error {
 	SaveCatalog := flag.Bool("save_catalog", true, "是否保存Catalog文件")
 	Update := flag.Bool("update", false, "以更新模式启动程序")
 	UpdateCopy := flag.Bool("update_copy", false, "更新模式下复制新文件到UpdateData目录下储存")
+	UpdateClean := flag.Bool("update_clean", false, "更新模式下清理过期文件")
 	AssetBundls := flag.Bool("asset_bundls", false, "下载/更新AssetBundls文件")
 	TableBundles := flag.Bool("table_bundles", false, "下载/更新TableBundles文件")
 	MediaResources := flag.Bool("media_resources", false, "下载/更新MediaResources文件")
@@ -54,6 +56,7 @@ func Init() error {
 	Data.SaveCatalog = *SaveCatalog
 	Data.Update = *Update
 	Data.UpdateCopy = *UpdateCopy
+	Data.UpdateClean = *UpdateClean
 	if *AssetBundls || *TableBundles || *MediaResources {
 		Data.AssetBundls = *AssetBundls
 		Data.TableBundles = *TableBundles
