@@ -1,7 +1,7 @@
 /*
  * @Author: nijineko
  * @Date: 2023-03-03 23:43:42
- * @LastEditTime: 2023-03-19 02:59:26
+ * @LastEditTime: 2023-03-26 03:13:29
  * @LastEditors: nijineko
  * @Description: 下载文件
  * @FilePath: \DataDownload\internal\Download\Download.go
@@ -53,7 +53,7 @@ func File(URL string, FileSavePath string) (int64, uint32, error) {
 	if err != nil {
 		return 0, 0, err
 	}
-	File, err := os.OpenFile(FileSavePath, os.O_CREATE|os.O_WRONLY, 0644)
+	File, err := os.OpenFile(FileSavePath, os.O_CREATE|os.O_TRUNC|os.O_WRONLY, 0644)
 	if err != nil {
 		return 0, 0, err
 	}
