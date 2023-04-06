@@ -6,15 +6,12 @@
  * @Description: 
  * @FilePath: \DataDownload\README.md
 -->
-# blue-archive-data-download
-BlueArchive游戏文件下载工具，使用Golang实现
+# ToaruIF-data-download
+ToaruIF游戏文件下载工具，使用Golang实现
 ![example](example.gif)
 
 # 使用
-前往[Releases](https://github.com/nijinekoyo/blue-archive-data-download/releases)下载程序后，执行以下命令即可
-```
-.\BlueArchiveDataDownload.exe -data_version xxx_xxxxxxxxxxxxxxxxxxxx
-```
+暂无，仅学习
 
 # 参数
 ```
